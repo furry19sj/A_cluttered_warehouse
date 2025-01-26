@@ -1,7 +1,9 @@
 项目的使用  
 你可以前往[furry19.top/maimai](https://furry19.top/maimai)使用它，也可以使用本项目自行建设服务器  
 
-使用须知：项目使用了cookie保存url，如果你使用了本项目，则表示你允许了网站储存并读取基本的cookie，如果你不同意使用cookie，请立即停止使用  
+使用须知：
+- 本项目使用了cookie保存url，如果你使用了本项目，则表示你允许了网站储存并读取基本的cookie，如果你不同意使用cookie，请立即停止使用
+- 本项目仅为客户端，服务端请前往[MaimaiHelper](https://github.com/SomeUtils/MaimaiHelper/releases)
 
 ## 配置
 
