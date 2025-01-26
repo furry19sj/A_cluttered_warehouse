@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MAIMAI DX</title>
+    <script>
+        function getCookie(name) {
+            let cookieArray = document.cookie.split('; ');
+            for (let i = 0; i < cookieArray.length; i++) {
+                let cookiePair = cookieArray[i].split('=');
+                if (name === cookiePair[0]) {
+                    return decodeURIComponent(cookiePair[1]);
+                }
+            }
+            return null;
+        }
+
+        function setCookie(name, value, days) {
+            let expires = '';
+            if (days) {
+                let date = new Date();
+                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                expires = '; expires=' + date.toUTCString();
+            }
+            document.cookie = name + '=' + encodeURIComponent(value) + expires + '; path=/';
+        }
+
+        function promptForImageURL() {
+            document.getElementById('modal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('modal').style.display = 'none';
+        }
+
+        function saveImageURL() {
+            let urlInput = document.getElementById('urlInput');
+            let url = urlInput.value;
+            if (url) {
+                setCookie('imageUrl', url, 365);
+                loadImage(url);
+                closeModal();
+            }
+        }
+
+        function loadImage(url) {
+            let imgElement = document.getElementById('img');
+            if (imgElement) {
+                imgElement.src = url;
+                imgElement.style.display = 'block';
+            }
+        }
+
+        function handleError() {
+            let imgDiv = document.getElementById('img-div');
+            if (imgDiv) {
+                imgDiv.style.borderColor = 'red';
+            }
+            let imgElement = document.getElementById('img');
+            if (imgElement) {
+                imgElement.src = "https://via.placeholder.com/150";
+                imgElement.alt = "图片加载失败";
+            }
+        }
+
+        function adjustImgDivSize() {
+            let imgDiv = document.getElementById('img-div');
+            if (imgDiv) {
+                let width = window.innerWidth;
+                let height = window.innerHeight;
+
+                if (height > width) {
+                    imgDiv.style.width = '60%';
+                    imgDiv.style.height = 'auto';
+                } else {
+                    imgDiv.style.height = '60%';
+                    imgDiv.style.width = 'auto';
+                }
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            let savedUrl = getCookie('imageUrl');
+            if (savedUrl) {
+                loadImage(savedUrl);
+            } else {
+                promptForImageURL();
+            }
+
+            let imgElement = document.getElementById('img');
+            if (imgElement) {
+                imgElement.onerror = handleError;
+            }
+
+            let controlLayer = document.getElementById('control-layer');
+            let timeoutId = null;
+
+            controlLayer.addEventListener('mousedown', (e) => {
+                e.preventDefault();
+                timeoutId = setTimeout(() => {
+                    promptForImageURL();
+                }, 1000);
+            });
+
+            controlLayer.addEventListener('mouseup', (e) => {
+                e.preventDefault();
+                clearTimeout(timeoutId);
+                let savedUrl = getCookie('imageUrl');
+                if (savedUrl) {
+                    loadImage(savedUrl);
+                } else {
+                    promptForImageURL();
+                }
+            });
+
+            controlLayer.addEventListener('mouseleave', () => {
+                clearTimeout(timeoutId);
+            });
+
+            controlLayer.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                timeoutId = setTimeout(() => {
+                    promptForImageURL();
+                }, 1000);
+            });
+
+            controlLayer.addEventListener('touchend', (e) => {
+                e.preventDefault();
+                clearTimeout(timeoutId);
+                let savedUrl = getCookie('imageUrl');
+                if (savedUrl) {
+                    loadImage(savedUrl);
+                } else {
+                    promptForImageURL();
+                }
+            });
+
+            controlLayer.addEventListener('touchcancel', () => {
+                clearTimeout(timeoutId);
+            });
+
+            adjustImgDivSize();
+            window.addEventListener('resize', adjustImgDivSize);
+
+            setInterval(() => {
+                let imgDiv = document.getElementById('img-div');
+                let imgElement = document.getElementById('img');
+                if (imgElement.complete && imgElement.naturalWidth !== 0) {
+                    imgDiv.style.borderColor = 'black';
+                } else {
+                    imgDiv.style.borderColor = 'red';
+                }
+            }, 1000);
+        });
+    </script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+        #main {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        #img-div {
+            border: 4px solid black;
+            border-radius: 20px;
+            transition: border-color 0.5s ease; 
+            max-width: 100%;
+            max-height: 100%;
+            aspect-ratio: 1/1;
+            position: relative;
+        }
+        #control-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+        .img {
+            display: flex;
+            margin: 0 auto;
+            max-width: 100%;
+            max-height: 100%;
+            border-radius: 20px;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        #modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 4px solid #888;
+            width: 80%;
+            max-width: 400px;
+            border-radius: 20px;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div id="main">
+        <div id="img-div">
+            <img src="" id="img" class="img">
+            <div id="control-layer"></div>
+        </div>
+        <div id="text" style="display: none;">
+            <p>点击图片重新加载</p>
+            <p>长按图片设置网址</p>
+        </div>
+    </div>
+
+    <div id="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <p>请输入图片的网址：</p>
+            <input type="text" id="urlInput" placeholder="https://" style="width: 100%; padding: 10px; box-sizing: border-box;">
+            <button onclick="saveImageURL()" style="margin-top: 10px; padding: 10px; width: 100%;">保存</button>
+        </div>
+    </div>
+
+    <div id="statement" style="display: none;">
+        <p>本网站由<a href="https://github.com/furry19sj/">Furry19</a>开发，基于<a href="https://github.com/SomeUtils/MaimaiHelper/">MaimaiHelper</a>项目</p>
+    </div>
+</body>
+</html>
