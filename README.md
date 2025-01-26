@@ -12,7 +12,7 @@
 
 如果你在使用时发现了错误或有更好的建议，可发送邮件至[furry19@126.com](mailto:furry19@126.com?subject=错误或建议)  
 
-<span style="color: red;">使用须知：项目使用了cookie保存url，如果你使用了本项目，则表示你允许了网站储存并读取基本的cookie，如果你不同意使用cookie，请立即停止使用</span>
+<font color="red">使用须知：项目使用了cookie保存url，如果你使用了本项目，则表示你允许了网站储存并读取基本的cookie，如果你不同意使用cookie，请立即停止使用</font>
 
 ***
 以下是关于使用本项目的许可协议和额外要求。
