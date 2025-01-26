@@ -1,4 +1,5 @@
- **使用
+项目的使用
+  你可以前往[furry19.top/maimai](https://furry19.top/maimai)使用它
 
 ***
 以下是关于使用本项目的许可协议和额外要求。
